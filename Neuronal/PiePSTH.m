@@ -18,10 +18,10 @@ EV_STR  = events_str;
 %% Subselect data
 %Direct choice:
 booluseDirect = true;
-CluSelDirect = [1:31]%[5 9 12 13 18 19 21];%[2 6 12 21 24 27];
+CluSelDirect = [11:12] %[5 9 12 13 18 19 21];%[2 6 12 21 24 27];
 
 %Probe area
-boolAllAreas = true; %Use all available areas?
+boolAllAreas = false; %Use all available areas?
 V1     = 0;
 PPC    = 1;
 RL     = 0;
@@ -113,7 +113,7 @@ if boolAllAreas
     SS.Area.names = 'all';
 else
 SS.Area.names = {'V1','PPC','RL','Cg1'}; SS.Area.bools = logical([V1 PPC RL Cg1]); 
-CluSel1 = [(1:32)',(33:64)']*ismember(sessionData.Area,SS.Area.names(SS.Area.bools))'; CluSel1=CluSel1(:)';
+CluSel1 = CluSel1(ismember(clus.area,SS.Area.names(SS.Area.bools)));
 end
 if boolAllDepths
     SS.Depth_interval = [-inf +inf];
