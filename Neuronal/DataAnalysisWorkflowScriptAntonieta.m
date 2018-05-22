@@ -64,12 +64,12 @@ SWF     = spikes_clu_waveforms;
 
 %% Cluster quality assessment
 %Select which clusters to analyse here:
-CluSel = [19];%<--HERE
+CluSel = [2];%<--HERE
 %%%
 for clu = CluSel
     figure()
     % Waveform + average plots 
-    subplot(2,1,1)
+    subplot(2,2,[1 3])
     plot(SWF{1,clu}','Color',[.5 .5 .5])
     hold on
     plot(mean(SWF{1,clu}),'Color',[.8 .1 .1],'LineWidth',3)
@@ -77,10 +77,17 @@ for clu = CluSel
     ylim([-600 900])
     title('Waveform');ylabel('uV');xlabel('sample number')
     % Inter-Spike-Interval histogram
-    subplot(2,1,2)
-    ISI=diff(STS{1,clu}); ISI=ISI/1000; ISI=ISI(ISI<250);
+    subplot(2,2,2)
+    ISI=diff(STS{1,clu}); ISI=ISI/1000; ISI=ISI(ISI<350);
     histogram(ISI,'BinWidth',1)
-    xlim([0 250])
+    xlim([0 350])
+    xlabel('ms')
+    title('ISI')
+    % Inter-Spike-Interval histogram
+    subplot(2,2,4)
+    ISI=diff(STS{1,clu}); ISI=ISI/1000; ISI=ISI(ISI<20);
+    histogram(ISI,'BinWidth',1)
+    xlim([0 20])
     xlabel('ms')
     title('ISI')
     %Title stating cluster number

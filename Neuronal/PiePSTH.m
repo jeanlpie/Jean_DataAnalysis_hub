@@ -18,7 +18,7 @@ EV_STR  = events_str;
 %% Subselect data
 %Direct choice:
 booluseDirect = true;
-CluSelDirect = [11:12] %[5 9 12 13 18 19 21];%[2 6 12 21 24 27];
+CluSelDirect = [5 6] %2 6 9 34[5 9 12 13 18 19 21];%[2 6 12 21 24 27];
 
 %Probe area
 boolAllAreas = false; %Use all available areas?
@@ -37,10 +37,10 @@ boolFilt = true;
 
 %Trial-wise:
 %TrialType (Modality)
-trialType_catch     = 1;
+trialType_catch     = 0;
 trialType_tactile   = 1;
-trialType_visual    = 1;
-trialType_multi     = 1;
+trialType_visual    = 0;
+trialType_multi     = 0;
 
 %Stimulus Side (L vs R)
 %ONLY USE FOR CONGRUENT SESSIONS (for now)
@@ -63,7 +63,7 @@ laserON             = 1;
 laserOFF            = 1;
 
 %Condition-number
-SelConds            =  3; %1:32 %32 possible conditions [17 18 20 21]
+SelConds            =  1:32; %1:32 %32 possible conditions [17 18 20 21]
 
 %Other event sub-select (not stimuli):
 LFR_End             = 0;
