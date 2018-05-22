@@ -1,6 +1,6 @@
 %% PieTaskBeh_REC
 %Uses condition number
-%modified by antonieta
+%modified by antonieta and jean
 %% Cut trials
 cut_end_trials = 1;
 numtrials = length(trialData.trialEnd)-cut_end_trials;
