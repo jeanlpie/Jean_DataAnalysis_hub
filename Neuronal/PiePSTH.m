@@ -37,10 +37,10 @@ boolFilt = true;
 
 %Trial-wise:
 %TrialType (Modality)
-trialType_catch     = 0;
+trialType_catch     = 1;
 trialType_tactile   = 1;
-trialType_visual    = 0;
-trialType_multi     = 0;
+trialType_visual    = 1;
+trialType_multi     = 1;
 
 %Stimulus Side (L vs R)
 %ONLY USE FOR CONGRUENT SESSIONS (for now)
@@ -63,7 +63,7 @@ laserON             = 1;
 laserOFF            = 1;
 
 %Condition-number
-SelConds            =  1:32; %1:32 %32 possible conditions [17 18 20 21]
+SelConds            =  7; %1:32 %32 possible conditions [17 18 20 21]
 
 %Other event sub-select (not stimuli):
 LFR_End             = 0;
@@ -120,9 +120,9 @@ if boolAllDepths
 else
     CluSel2 = find(clus.zpos<=SS.Depth_interval(2) & clus.zpos>=SS.Depth_interval(1));
 end
-CluSel4 = CluSel4(ismember(CluSel1,CluSel2));
+CluSel4 = CluSel1(ismember(CluSel1,CluSel2));
 if booluseDirect
-    CluSel = CluSel(ismember(CluSelDirect,CluSel4));
+    CluSel = CluSelDirect(ismember(CluSelDirect,CluSel4));
 else
     CluSel = CluSel4;
 end
