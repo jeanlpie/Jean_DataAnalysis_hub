@@ -64,13 +64,13 @@ SWF     = spikes_clu_waveforms;
 
 %% Cluster quality assessment
 %Select which clusters to analyse here:
-CluSel = [2];%<--HERE
+CluSel = [1 2 3 4 5 6 8 9 10 11 12 13 14 15 19 20 21 22 24 26 27 28];%<--HERE
 %%%
 for clu = CluSel
     figure()
     % Waveform + average plots 
     subplot(2,2,[1 3])
-    plot(SWF{1,clu}','Color',[.5 .5 .5])
+    plot(SWF{1,clu}(1:round(length(STS{1,clu})/3),:)','Color',[.5 .5 .5])
     hold on
     plot(mean(SWF{1,clu}),'Color',[.8 .1 .1],'LineWidth',3)
     xlim([0 64])
@@ -78,9 +78,9 @@ for clu = CluSel
     title('Waveform');ylabel('uV');xlabel('sample number')
     % Inter-Spike-Interval histogram
     subplot(2,2,2)
-    ISI=diff(STS{1,clu}); ISI=ISI/1000; ISI=ISI(ISI<350);
+    ISI=diff(STS{1,clu}); ISI=ISI/1000; ISI=ISI(ISI<400);
     histogram(ISI,'BinWidth',1)
-    xlim([0 350])
+    xlim([0 400])
     xlabel('ms')
     title('ISI')
     % Inter-Spike-Interval histogram
@@ -103,7 +103,7 @@ end
 % for clu =  %12%CluSel
 %     [~,~]=make_psth5(EV_TS,STS(clu),EV_STR, -1400000,2000000,50000,e1,1);
 %     %Times in microseconds : pre, post, and bin.
-%     suptitle(strcat('Cluster n°',num2str(clu),'-',e1));
+%     suptitle(strcat('Cluster nï¿½',num2str(clu),'-',e1));
 % end
 %Uncomment if you'd like to plot all selected clusters together
 [~,~]=make_psth5(EV_TS,STS(CluSel),EV_STR, -500000,1600000,50000,e1,0);
@@ -174,8 +174,8 @@ boxplot(Sil,clus.lpos)
 
 %% Cross-correlation
 %Compare the following clusters:
-    clus1 = 13;
-    clus2 = 14;
+    clus1 = 2;
+    clus2 = 15;
 %
 figure()
 %

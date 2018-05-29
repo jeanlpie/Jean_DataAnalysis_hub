@@ -21,11 +21,11 @@ EV_STR  = events_str;
 %% Subselect data
 %Direct choice:
 booluseDirect = true;
-CluSelDirect = [42 61 65 82 63]%[5 9 12 13 18 19 21];%[2 6 12 21 24 27];
+CluSelDirect = [1 2 3 4 5 6 8 9 10 11 12 13 14 15 19 20 21 22 24 26 27 28]%[5 9 12 13 18 19 21];%[2 6 12 21 24 27];
 
 %Probe area
 boolAllAreas = true; %Use all available areas?
-V1     = 1;
+V1     = 0;
 PPC    = 1;
 RL     = 0;
 Cg1    = 0;
