@@ -18,7 +18,7 @@ EV_STR  = events_str;
 %% Subselect data
 %Direct choice:
 booluseDirect = true;
-CluSelDirect = [5 6] %2 6 9 34[5 9 12 13 18 19 21];%[2 6 12 21 24 27];
+CluSelDirect = [1] %2 6 9 34[5 9 12 13 18 19 21];%[2 6 12 21 24 27];
 
 %Probe area
 boolAllAreas = false; %Use all available areas?
@@ -37,21 +37,24 @@ boolFilt = true;
 
 %Trial-wise:
 %TrialType (Modality)
-trialType_catch     = 1;
-trialType_tactile   = 1;
+trialType_catch     = 0;
+trialType_tactile   = 0;
 trialType_visual    = 1;
-trialType_multi     = 1;
+trialType_multi     = 0;
+
+%Condition-number (For correct right V4, T9, M13)
+SelConds            = 9; %1:32 %32 possible conditions [17 18 20 21]
 
 %Stimulus Side (L vs R)
 %ONLY USE FOR CONGRUENT SESSIONS (for now)
-stimSide_L          = 1;
+stimSide_L          = 0;
 stimSide_R          = 1;
-stimSide_N          = 1;
+stimSide_N          = 0;
 
 %Mouse choice resp.
-firstRespLFR_L      = 1; 
+firstRespLFR_L      = 0; 
 firstRespLFR_R      = 1; 
-firstRespLFR_none   = 1;
+firstRespLFR_none   = 0;
 
 %Trial Outcome
 correctResponse     = 1;
@@ -59,11 +62,8 @@ firstIncorrect      = 0;
 noResponse          = 0;
 
 %Optogenetics
-laserON             = 1;
+laserON             = 0;
 laserOFF            = 1;
-
-%Condition-number
-SelConds            =  7; %1:32 %32 possible conditions [17 18 20 21]
 
 %Other event sub-select (not stimuli):
 LFR_End             = 0;
@@ -73,6 +73,37 @@ lickRight           = 0;
 only_StimEpoch      = 0;
 only_LFR            = 0;
 only_ITI            = 0;
+
+
+% Compose name: AREA_Modality_Side_Condition_Outcome_Opto
+condition_name = strcat(SS.Area.names{SS.Area.bools}, '_');
+if booluseDirect
+    allOneString = sprintf('%.0f-' , CluSelDirect);
+    allOneString = allOneString(1:end-1);
+    condition_name = strcat(condition_name, allOneString);
+    condition_name = strcat(condition_name, '_');
+end
+if trialType_catch; condition_name = strcat(condition_name, 'C'); end
+if trialType_tactile; condition_name = strcat(condition_name, 'T'); end
+if trialType_visual; condition_name = strcat(condition_name, 'V'); end
+if trialType_multi; condition_name = strcat(condition_name, 'M'); end
+condition_name = strcat(condition_name, '_');
+if stimSide_L; condition_name = strcat(condition_name, 'L'); end
+if stimSide_R; condition_name = strcat(condition_name, 'R'); end
+if stimSide_N; condition_name = strcat(condition_name, 'N'); end
+allOneString = sprintf('%.0f-' , SelConds);
+allOneString = allOneString(1:end-1);
+condition_name = strcat(condition_name, allOneString, '_');
+
+if correctResponse; condition_name = strcat(condition_name, 'Co'); end
+if firstIncorrect; condition_name = strcat(condition_name, 'In'); end
+if noResponse; condition_name = strcat(condition_name, 'Nr'); end
+condition_name = strcat(condition_name, '_');
+
+if laserON; condition_name = strcat(condition_name, 'On'); end
+if laserOFF; condition_name = strcat(condition_name, 'Off'); end
+
+disp(condition_name)
 
 %% Select analysis parameters
 %Peri-Event Window for all plots
@@ -310,6 +341,11 @@ xlabel('Time (sec)') %Label x-axis
 ylabel('Hz') %Label x-axis
 xlim([win(1) win(2)]*1e-3);
 
+%Get Z-scores
+Zpsth=zscore(psth)
+filename=strcat('z-score_', condition_name, '.mat')
+save(filename, 'Zpsth', 'psth')
+
 %Make SDF
 A=[];
 A(:,1) = (edges+BinSize*1e3/2)*1e-6;
@@ -318,8 +354,57 @@ A(:,2) = psth;
 subplot(2,2,4)
 plot(B(:,1),B(:,2))
 xlabel('Time (sec)') %Label x-axis
-ylabel('Hz') %Label x-axis
+ylabel('Hz') %Label y-axis
 xlim([win(1) win(2)]*1e-3);
+
+filename=strcat('z-score', condition_name, '.pdf');
+fig = gcf;
+fig.PaperPositionMode = 'auto'
+fig_pos = fig.PaperPosition;
+fig.PaperSize = [fig_pos(3) fig_pos(4)];
+print(gcf,filename,'-dpdf')
+pause(0.1)
+close
+
+%% Plot several firing frequencies in one plot
+
+fc = load('z-score_PPC_28_T_R9_Co_Off')
+red_line = fc.Zpsth
+
+fc = load('z-score_PPC_28_V_R4_Co_Off')
+blue_line = fc.Zpsth
+
+fc = load('z-score_PPC_28_M_R13_Co_Off.mat')
+purple_line = fc.Zpsth
+
+labels = {'TR', 'VR', 'MR'} % Red blue purple labels
+filename=strcat('frequencies_newplot.pdf');
+
+%Make SDF with Z-scores
+figure()
+[B] = msdf([((edges+BinSize*1e3/2)*1e-6)', red_line'],'Gauss',2);
+plot(B(:,1),B(:,2), 'r')
+hold on
+[B] = msdf([((edges+BinSize*1e3/2)*1e-6)', blue_line'],'Gauss',2);
+plot(B(:,1),B(:,2), 'b')
+[B] = msdf([((edges+BinSize*1e3/2)*1e-6)', purple_line'],'Gauss',2);
+plot(B(:,1),B(:,2), 'color', [0.49 0.18 0.45])
+
+% title('Correct')
+legend(labels, 'Location', 'NorthWest')
+xlabel('Time (sec)') %Label x-axis
+ylabel('psth z-score') %Label y-axis
+set(findall(gcf,'-property','FontSize'),'FontSize',18)
+xlim([win(1) win(2)]*1e-3);
+ylim([-1 1]*1.5);
+
+fig = gcf;
+fig.PaperPositionMode = 'auto'
+fig_pos = fig.PaperPosition;
+fig.PaperSize = [fig_pos(3) fig_pos(4)];
+print(gcf,filename,'-dpdf')
+pause(0.1)
+
 
 
 % boolBslnNorm    = 0;
