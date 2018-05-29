@@ -18,7 +18,7 @@ EV_STR  = events_str;
 %% Subselect data
 %Direct choice:
 booluseDirect = true;
-CluSelDirect = [5 6] %2 6 9 34[5 9 12 13 18 19 21];%[2 6 12 21 24 27];
+CluSelDirect = [5 6 19] %2 6 9 34[5 9 12 13 18 19 21];%[2 6 12 21 24 27];
 
 %Probe area
 boolAllAreas = false; %Use all available areas?
@@ -54,16 +54,16 @@ firstRespLFR_R      = 1;
 firstRespLFR_none   = 1;
 
 %Trial Outcome
-correctResponse     = 1;
+correctResponse     = 0;
 firstIncorrect      = 0;
-noResponse          = 0;
+noResponse          = 1;
 
 %Optogenetics
 laserON             = 1;
 laserOFF            = 1;
 
 %Condition-number
-SelConds            =  7; %1:32 %32 possible conditions [17 18 20 21]
+SelConds            =  [10 11]; %1:32 %32 possible conditions [17 18 20 21]
 
 %Other event sub-select (not stimuli):
 LFR_End             = 0;
