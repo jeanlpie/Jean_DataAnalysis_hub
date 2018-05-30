@@ -18,7 +18,7 @@ for ch=1:size(STS,2) %for each channel
     t = raw_psth{k}; 
     rast = [rast, t]; %Stores ALL relative spiketimes for PSTH
     %make it in timebase 1ms then convolve w gaussian.
-    frpertrial(k,:) = conv( histc(raw_psth{k}/1E3, tempsms) , kernel, 'same' ) ; %can use valid for only valid part of conv
+    frpertrial(k,:) = conv( histc(raw_psth{k}/1E3, tempsms) , kernel, 'same' ) / (size(STS,2) * 1E-3); %can use valid for only valid part of conv
     
     for i = 1:length(t) %Loop through each spike time
         line([t(i) t(i)]*1e-6, [k+((ch-1)*length(EV_TS))-1 k+((ch-1)*length(EV_TS))], 'Color', colorvec(ch,:),'LineWidth',2) %Create a tick mark at x = t1(i) with a height of 1
@@ -49,6 +49,7 @@ FRsem = FRstd/sqrt(length(EV_TS));
 subplot(2,2,4)
 shadedErrorBar(tempsms,FRmean,FRsem,'lineProps',{'Color',[.7 0 .7],'LineWidth',2},'patchSaturation',0.1)
 xlim(win)
+ylabel('Firing Rate (Hz)')
 
 %Old SDF (smoothing psth)
 % A=[];
